@@ -20,4 +20,5 @@ tmp/tags
 .sass-cache/
 public/assets/*
 rails_best_practices_output.html
-config/initializers/set_envs.rb
+config/initializers/01_set_envs.rb
+tmp
