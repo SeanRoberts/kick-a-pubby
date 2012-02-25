@@ -17,7 +17,7 @@ class Group
     end
     
     def raw_xml
-      if !File.exist?(cache_path) || File.mtime(cache_path) < 1.hours.ago
+      if !File.exist?(cache_path) || File.mtime(cache_path) < lambda { 1.hours.ago }.call
         remote_xml
       else
         local_xml

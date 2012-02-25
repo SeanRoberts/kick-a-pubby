@@ -2,6 +2,7 @@ class PlayerList
   def initialize
     @players = []
     regex = /^#\s+\d+\s+\"(.+)\"\s+([_A-Za-z:0-9]+)\s/
+    raise "Error getting status." if raw_status.blank?
     raw_status.split("\n")[8..-1].each do |line|
       match = line.match(regex)
       @players << Player.new(match.captures[0], match.captures[1]) if match
@@ -23,7 +24,7 @@ class PlayerList
   
   private
     def raw_status
-      if !File.exist?(cache_path) || File.mtime(cache_path) < 5.minutes.ago
+      if !File.exist?(cache_path) || File.mtime(cache_path) < lambda { 5.minutes.ago }.call
         remote_status
       else
         local_status
@@ -38,8 +39,8 @@ class PlayerList
         f.puts status
         f.close
         status
-      rescue OpenURI::HTTPError
-        local_xml
+      rescue RCon::NetworkException
+        local_status
       end
     end
     
