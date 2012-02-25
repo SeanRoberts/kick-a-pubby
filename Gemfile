@@ -14,7 +14,7 @@ gem 'omniauth'
 gem 'omniauth-openid', :git => 'git://github.com/reu/omniauth-openid.git'
 gem 'omniauth-steam'
 gem 'rcon'
-gem 'sqlite3'
+
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -44,6 +44,10 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'ruby-debug'
+
+group :development do
+  gem 'sqlite3'
+end
 
 group :production do
   gem "pg"
