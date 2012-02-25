@@ -1,0 +1,20 @@
+hostname: A New GameServers.com TF2 Server is Born
+version : 1.2.0.0/21 4833 secure
+udp/ip  : 68.232.183.80:27015  (public ip: 68.232.183.80)
+account : not logged in  (No account specified)
+map     : pl_hoodoo_final at: 0 x, 0 y, 0 z
+players : 12 (25 max)
+
+# userid name                uniqueid            connected ping loss state  adr
+#    207 "HI THERE"          BOT                                     active
+#    196 "Soulless"          BOT                                     active
+#    197 "CEDA"              BOT                                     active
+#    198 "BeepBeepBoop"      BOT                                     active
+#    199 "NotMe"             BOT                                     active
+#    200 "CreditToTeam"      BOT                                     active
+#    201 "BoomerBile"        BOT                                     active
+#    202 "Someone Else"      BOT                                     active
+#    203 "Mann Co."          BOT                                     active
+#    204 "Dog"               BOT                                     active
+#    205 "Kaboom!"           BOT                                     active
+#    206 "AmNot"             BOT                                     active

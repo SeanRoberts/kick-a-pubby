@@ -1,0 +1,21 @@
+%table
+  %tr
+    %th Players (#{@players.size}/24)
+    %th Pubby?
+  - @players.each do |player|
+    %tr
+      %td= player.name
+      %td= player.pubby? ? "Yes" : "No"
+  - if current_user && !current_user.pubby?
+    %tr
+      %td{:colspan => 2}= button_to "Kick a Pubby", "/players/kick", :class => "button", :disable_with => "Ruining someone's day..."
+
+%p 
+  List updates every 3 minutes or on kick.  
+  %br/
+  %small
+    Last update: 
+    = File.mtime(File.join(Rails.root, 'tmp', 'status_cache.txt'))
+    %br/
+    Current Time:
+    = Time.now

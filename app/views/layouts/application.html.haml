@@ -1,0 +1,29 @@
+!!!
+%html
+  %head
+    %title Tf2lcs
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    - if flash[:notice]
+      #notification-bar
+        = image_tag("yay.png")
+        = raw(flash[:notice])
+    - if flash[:warning] || flash[:alert]
+      #warning= raw(flash[:warning]) || raw(flash[:alert])
+      
+    #container
+      #user-nav
+        - if current_user
+          Hello #{current_user.name}
+          %br/
+          - if current_user.pubby?
+            You are a pubby and have no access to the kick command.  You must be a member of the Something Awful forums and a member of the Lost Continents Steam group to be not a pubby.
+            Our list is sometimes out of date by up to an hour.  This will not affect your protection from being kicked, only your ability to kick others.
+          = link_to "Sign Out", signout_path
+        - else
+          = link_to image_tag("sits_large_border.png", :alt => "Sign in with Steam"), "/auth/steam"
+
+      %h1 Pubby Kicker
+      = yield

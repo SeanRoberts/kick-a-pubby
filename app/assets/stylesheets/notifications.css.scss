@@ -1,0 +1,10 @@
+#notification-bar{background:#333;color:white;display:none;cursor:pointer;font-size:20px;line-height:30px;opacity:0.85;padding:4px 0px 8px;position:fixed;bottom:0;left:0;text-align:center;width:100%;z-index:1000;}
+#notification-bar img{position:relative; left:-20px; top:7px; }
+#warning{position:fixed;top:35%;left:40%;width:400px;background:#FFC9C9;border:2px solid red;text-align:center;font-size:14px;font-weight:bold;z-index:1000;color:red;padding:50px 0px;opacity:0.95;}
+
+.flash-msg,.errorExplanation{padding:15px 20px 15px 20px;margin-top:10px;margin-bottom:15px;}
+.flash-msg a,.errorExplanation a {color:#e81616;}
+.errorExplanation,#flash-warning,#flash-error{color:#494949;border:1px solid #e6ed7a;background:#f8ff83;}
+.errorExplanation h2{display:none;}
+.errorExplanation p{font-size:14px;font-weight:bold;margin-top:0px;}
+.errorExplanation ul {font-size:13px;padding-left:25px; }
