@@ -28,12 +28,6 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-group :development, :test, :cucumber do 
-  gem "linecache", "0.43"
-  gem "ruby-debug-base", "0.10.4.0"
-  gem "ruby-debug", "0.10.4"
-end
-
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
