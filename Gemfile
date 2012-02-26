@@ -13,7 +13,6 @@ gem 'json'
 gem 'omniauth'
 gem 'omniauth-openid', :git => 'git://github.com/reu/omniauth-openid.git'
 gem 'omniauth-steam'
-gem 'rcon'
 
 
 # Gems used only for assets and not required

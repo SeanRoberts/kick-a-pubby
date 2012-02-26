@@ -1,8 +1,8 @@
 class PlayerList
   def initialize
     @players = []
+    @remote_attempts = 0
     regex = /^#\s+\d+\s+\"(.+)\"\s+([_A-Za-z:0-9]+)\s/
-    raise "Error getting status." if raw_status.blank?
     raw_status.split("\n")[8..-1].each do |line|
       match = line.match(regex)
       @players << Player.new(match.captures[0], match.captures[1]) if match
@@ -33,23 +33,26 @@ class PlayerList
     
     def remote_status
       begin
+        @remote_attempts += 1
         rcon = RconConnection.new
         f = File.new(cache_path, "w")
         status = rcon.command('status')
         f.puts status
         f.close
         status
-      rescue RCon::NetworkException
-        local_status
+      rescue RCon::NetworkException => e
+        puts "[Rcon Error] " + e
+        if @remote_attempts < 3
+          local_status
+        else
+          raise "Unable to retrieve remote status and local status cache empty."
+        end
       end
     end
     
     def local_status
-      begin
-        File.open(cache_path, "rb").read
-      rescue
-        raise "Could not open status"
-      end
+      status = File.open(cache_path, "rb").read
+      status.blank? ? remote_status : status
     end
   
     def cache_path

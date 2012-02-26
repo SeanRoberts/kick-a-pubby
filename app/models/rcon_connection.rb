@@ -1,3 +1,5 @@
+require 'rcon'
+
 class RconConnection
   def initialize
     @rcon = RCon::Query::Source.new(ENV["RCON_ADDRESS"], ENV["RCON_PORT"] || 27015)
