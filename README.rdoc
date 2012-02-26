@@ -4,10 +4,10 @@ Use this app to let members of your Steam group log in and kick non-members off 
 
 This app relies on the following variables:
 
-ENV["STEAM_WEB_API_KEY"]
-ENV["RCON_ADDRESS"]
-ENV["RCON_PASSWORD"]
-ENV["GROUP_NAME"]
+    ENV["STEAM_WEB_API_KEY"]
+    ENV["RCON_ADDRESS"]
+    ENV["RCON_PASSWORD"]
+    ENV["GROUP_NAME"]
 
 == Licenses
 
