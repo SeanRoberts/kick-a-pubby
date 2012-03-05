@@ -8,20 +8,20 @@ class PlayerList
       @players << Player.new(match.captures[0], match.captures[1]) if match
     end
   end
-  
-  
+
+
   def each(&blk)
     @players.each(&blk)
   end
-  
+
   def size
     @players.size
   end
-  
+
   def players
     @players
   end
-  
+
   private
     def raw_status
       if !File.exist?(cache_path) || File.mtime(cache_path) < lambda { 5.minutes.ago }.call
@@ -30,12 +30,12 @@ class PlayerList
         local_status
       end
     end
-    
+
     def remote_status
       begin
         @remote_attempts += 1
         rcon = RconConnection.new
-        f = File.new(cache_path, "w")
+        f = File.new(cache_path, "wb")
         status = rcon.command('status')
         f.puts status
         f.close
@@ -49,13 +49,13 @@ class PlayerList
         end
       end
     end
-    
+
     def local_status
       status = File.open(cache_path, "rb").read
       status.blank? ? remote_status : status
     end
-  
+
     def cache_path
       File.join(Rails.root, 'tmp', 'status_cache.txt')
     end
-end    
+end
