@@ -33,10 +33,10 @@
               %br/
               = File.mtime(File.join(Rails.root, 'tmp', 'status_cache.txt')).strftime('%B %e, %Y at %l:%M%p')
               %br/
-            - if File.exist?(File.join(Rails.root, 'tmp', 'group_cache_lostcontinents.xml'))
+            - if File.exist?(File.join(Rails.root, 'tmp', 'group_cache_lostcontinents.txt'))
               %strong Group Member List Last Update:
               %br/
-              = File.mtime(File.join(Rails.root, 'tmp', 'group_cache_lostcontinents.xml')).strftime('%B %e, %Y at %l:%M%p')
+              = File.mtime(File.join(Rails.root, 'tmp', 'group_cache_lostcontinents.txt')).strftime('%B %e, %Y at %l:%M%p')
               %br/
             %strong Current Server Time:
             %br/
