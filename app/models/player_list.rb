@@ -5,7 +5,7 @@ class PlayerList
     regex = /^#\s+\d+\s+\"(.+)\"\s+([_A-Za-z:0-9]+)\s/
     raw_status.split("\n")[8..-1].each do |line|
       match = line.match(regex)
-      @players << Player.new(match.captures[0], match.captures[1]) if match
+      @players << Player.new(match.captures[0], match.captures[1]) if match && match.captures[0] != "replay"
     end
   end
 

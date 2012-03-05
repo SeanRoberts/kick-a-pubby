@@ -21,8 +21,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -33,7 +33,7 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
@@ -56,28 +56,31 @@ table {
 	border-spacing: 0;
 }
 
-body { 
+body {
   /* background: image-url('background.png') repeat; */
   background: image-url('bottom-bg.jpg') center bottom fixed no-repeat #000;
-  margin: 0; 
+  margin: 0;
   font-family: Helvetica, Arial, Sans-Serif;
   font-size: 14px;
-  line-height: 18px; 
+  line-height: 18px;
 }
 
 h1 { margin: 0px 0px 20px; font-size: 32px; }
 small { font-size: 12px; }
-#container { 
-  width: 920px; 
-  margin: 10px auto 30px; 
-  background-color: rgba(255,255,255,0.8); 
+strong { font-weight: bold; }
+#container {
+  width: 920px;
+  margin: 10px auto 30px;
+  background-color: rgba(255,255,255,0.8);
   border-radius: 8px;
-  border: 1px solid #000; 
-  height: 100%; 
+  border: 1px solid #000;
+  height: 100%;
   box-shadow: 3px 3px 10px #2F2F2F;
   padding: 20px;
-  
+
 }
+.spacer{border:0;clear:both;float:none;height:0;margin:0;padding:0;width:0;}
+
 
 table {
   margin-bottom: 20px;
@@ -90,9 +93,9 @@ table {
 
 #kick { font-size: 32px; font-weight: bold; }
 
-#user-nav { 
-  float: right; 
+#user-nav {
+  float: right;
   width: 200px;
-  font-size: 12px; 
+  font-size: 12px;
   text-align: right;
 }
