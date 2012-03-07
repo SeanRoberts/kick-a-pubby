@@ -30,7 +30,7 @@ native bool:Steam_IsAchieved(client, String:achievementName[]);
 forward Action:Steam_StatsReceived(client);
 forward Action:Steam_StatsUnloaded(client);
 
-public Extension:__ext_SteamTools = 
+public Extension:__ext_SteamTools =
 {
   name = "SteamTools",
   file = "steamtools.ext",
@@ -58,22 +58,45 @@ public Plugin:myinfo = {
 
 new Handle:enabled = INVALID_HANDLE;
 new Handle:groupID = INVALID_HANDLE;
+new Handle:pubbyList = INVALID_HANDLE;
 
 public OnPluginStart()
 {
   LoadTranslations("common.phrases");
-  
+  pubbyList = CreateArray();
   enabled = CreateConVar("sm_grouplock_enabled", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
   groupID = CreateConVar("sm_steamgroup", "116359");
   RegAdminCmd("sm_kickpubby", KickPubby, ADMFLAG_KICK);
   RegServerCmd("sm_kickpubby", ServerKickPubby);
+  RegConsoleCmd("whois", ShowPubbies);
+}
+
+public Action:ShowPubbies(client, args) {
+  // Loop through clients and display their pubby status
+  for (new i; i <= MaxClients; i++) {
+    if (i != 0 && IsClientInGame(i) && !IsClientReplay(i))
+    {
+      new String:name[MAX_NAME_LENGTH];
+      new String:pubby_status[32];
+      GetClientName(i, name, sizeof(name));
+      if (Steam_RequestGroupStatus(i, GetConVarInt(groupID)))
+      {
+        pubby_status = "not a pubby";
+      } else {
+        pubby_status = "PUBBY";
+      }
+      PrintToConsole(client, "%s: %s", name, pubby_status);
+    }
+  }
 }
 
 public Action:KickPubby(client, args)
 {
-  if (!DoKickPubby()) {
-    ReplyToCommand(client, "No pubbies to kick!");
+  if (!DoKickPubby())
+  {
+    ReplyToCommand(client, "No pubbies to kick.");
   }
+
   return Plugin_Handled;
 }
 
@@ -83,31 +106,37 @@ public Action:ServerKickPubby(args) {
 }
 
 public DoKickPubby() {
-  new bool:pubby = false;
   if (GetConVarBool(enabled) || GetConVarInt(groupID) != 0)
   {
-    // Loop through clients and kick the first pubby
+    // Loop through clients and and build a list of pubbies
     for (new i; i <= MaxClients; i++)
     {
-      new String:name[MAX_NAME_LENGTH];
-      GetClientName(i, name, sizeof(name));
-      if (i != 0 && IsClientInGame(i) && !StrEqual("replay", name) && !Steam_RequestGroupStatus(i, GetConVarInt(groupID)))
+      if (i != 0 && IsClientInGame(i) && !IsClientReplay(i))
       {
-        KickClientEx(i, "%s", "Not in Steam Group");
-        pubby = true;
-        break;
+        Steam_RequestGroupStatus(i, GetConVarInt(groupID));
       }
     }
+
+    new totalPubbies = GetArraySize(pubbyList);
+    if (totalPubbies > 0)
+    {
+      new unluckyPubbyIdx = GetArrayCell(pubbyList, GetRandomInt(0, totalPubbies - 1));
+      KickClientEx(unluckyPubbyIdx, "%s", "Kicked by Kick-a-Pubby (Sorry)");
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
   }
-  return pubby;
 }
 
+public Action:Steam_GroupStatusResult(client, groupAccountID, bool:groupMember, bool:groupOfficer)
+{
+  if (groupAccountID == GetConVarInt(groupID) && !groupMember)
+  {
+    PushArrayCell(pubbyList, client);
+  }
+  return Plugin_Continue;
 
-// public Action:Steam_GroupStatusResult(client, groupAccountID, bool:groupMember, bool:groupOfficer)
-// {
-//  if (groupAccountID == GetConVarInt(groupID) && !groupMember)
-//  {
-//    KickClientEx(client, "%s", "Not in Steam Group");
-//  }
-//  return Plugin_Continue;
-// }
+}
