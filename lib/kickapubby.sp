@@ -81,21 +81,13 @@ public Action:KickPubby(client, args)
   kick = true;
   kicked = false;
   SendSteamCommand(client);
-  if (sent == 0) {
-    return Plugin_Handled;
-  } else {
-    return Plugin_Continue;
-  }
+  return Plugin_Handled;
 }
 
 public Action:ListPubbies(client, args) {
   kick = false;
   SendSteamCommand(client);
-  if (sent == 0) {
-    return Plugin_Handled;
-  } else {
-    return Plugin_Continue;
-  }
+  return Plugin_Handled;
 }
 
 public SendSteamCommand(client) {
