@@ -12,7 +12,7 @@
 
   - if current_user && !current_user.pubby?
     %tr
-      %td{:colspan => 2}= button_to "Kick a Pubby", "/players/kick", :class => "button", :disable_with => "Ruining someone's day...", :id => "kick"
+      %td{:colspan => 2}= button_to "Kick a Pubby", "/players/kick", :class => "button", :disable_with => "Ruining someone's day...", :id => "kick", :disabled => (@players.size < 24 || @players.select {|p| p.pubby?}.empty?)
 
 %p
   List updates every 3 minutes or on kick.

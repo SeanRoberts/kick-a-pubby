@@ -86,8 +86,8 @@ table {
   margin-bottom: 20px;
   th { font-weight: bold; }
   th, td { text-align: left; padding: 5px 10px; }
-  tr:nth-child(even) td { background: rgba(122,123,129, 0.4) }
   tr td:nth-child(2), tr th:nth-child(2) { text-align: right; }
+  tr:nth-child(even) td { background: rgba(122,123,129, 0.4) }
   td { border-top: 1px solid #747474; }
 }
 
