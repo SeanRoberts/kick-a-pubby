@@ -14,6 +14,10 @@ class PlayerList
     @players.each(&blk)
   end
 
+  def select(&blk)
+    @players.select(&blk)
+  end
+
   def size
     @players.size
   end
