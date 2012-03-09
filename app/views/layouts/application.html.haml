@@ -49,7 +49,5 @@
       .spacer
 
       :erb
-        <a href="http://www.gametracker.com/server_info/68.232.183.80:27015/" target="_blank"><img src="http://cache.www.gametracker.com/server_info/68.232.183.80:27015/b_350_20_692108_381007_FFFFFF_000000.png" border="0" width="350" height="20" alt=""/></a>
-        <br />
-        <a href="http://www.gameservers.com/clanpay/?clanid=6d7a01683ab9e776a78a540fa2ceab52">Donations</a>
+        <a href="http://www.gametracker.com/server_info/<%= ENV['RCON_ADDRESS'] %>:27015/" target="_blank"><img src="http://cache.www.gametracker.com/server_info/<%= ENV['RCON_ADDRESS'] %>:27015/b_350_20_692108_381007_FFFFFF_000000.png" border="0" width="350" height="20" alt=""/></a>
 
