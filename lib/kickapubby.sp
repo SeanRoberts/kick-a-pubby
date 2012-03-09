@@ -4,47 +4,7 @@
 
 #define AUTOLOAD_EXTENSIONS
 #define REQUIRE_EXTENSIONS
-#if defined _steamtools_included
-#endinput
-#endif
-#define _steamtools_included
-
-native bool:Steam_RequestGroupStatus(client, groupAccountID);
-native Steam_RequestGameplayStats();
-native Steam_RequestServerReputation();
-native Steam_ForceHeartbeat();
-native bool:Steam_IsVACEnabled();
-native bool:Steam_IsConnected();
-native Steam_GetPublicIP(octets[4]);
-forward Action:Steam_GroupStatusResult(client, groupAccountID, bool:groupMember, bool:groupOfficer);
-forward Action:Steam_GameplayStats(rank, totalConnects, totalMinutesPlayed);
-forward Action:Steam_Reputation(reputationScore, bool:banned, bannedIP, bannedPort, bannedGameID, banExpires);
-forward Action:Steam_RestartRequested();
-forward Action:Steam_SteamServersConnected();
-forward Action:Steam_SteamServersDisconnected();
-
-native Steam_RequestStats(client);
-native Steam_GetStat(client, String:statName[]);
-native Float:Steam_GetStatFloat(client, String:statName[]);
-native bool:Steam_IsAchieved(client, String:achievementName[]);
-forward Action:Steam_StatsReceived(client);
-forward Action:Steam_StatsUnloaded(client);
-
-public Extension:__ext_SteamTools =
-{
-  name = "SteamTools",
-  file = "steamtools.ext",
-#if defined AUTOLOAD_EXTENSIONS
-  autoload = 1,
-#else
-  autoload = 0,
-#endif
-#if defined REQUIRE_EXTENSIONS
-  required = 1,
-#else
-  required = 0,
-#endif
-}
+#include <steamtools>
 
 #define PLUGIN_VERSION "0.1.0"
 
@@ -56,110 +16,97 @@ public Plugin:myinfo = {
   url         = "http://github.com/SeanRoberts"
 };
 
-new Handle:enabled = INVALID_HANDLE;
-new Handle:groupID = INVALID_HANDLE;
-new bool:kick = false;
-new bool:kicked = false;
-new sent = 0;
-new received = 0;
 
-new ReplySource:Async_GroupStatus_Reply;
-new Async_GroupStatus_Client;
+
+new Handle:groupID  = INVALID_HANDLE;
+new Handle:goons    = INVALID_HANDLE;
+new Handle:pubbies  = INVALID_HANDLE;
+
 
 
 public OnPluginStart()
 {
+  LogMessage("Starting Kick-a-Pubby");
   LoadTranslations("common.phrases");
-  enabled = CreateConVar("sm_grouplock_enabled", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
   groupID = CreateConVar("sm_steamgroup", "116359");
-  RegAdminCmd("sm_kickpubby", KickPubby, ADMFLAG_KICK);
-  RegConsoleCmd("whois", ListPubbies);
+  pubbies = CreateArray();
+  goons   = CreateArray();
+
+  RegAdminCmd("sm_kickpubby", DoKick, ADMFLAG_KICK);
+  RegConsoleCmd("whois", DoList);
 }
 
-public Action:KickPubby(client, args)
+public OnClientPostAdminCheck(client)
 {
-  kick = true;
-  kicked = false;
-  SendSteamCommand(client);
-  return Plugin_Handled;
-}
-
-public Action:ListPubbies(client, args) {
-  kick = false;
-  SendSteamCommand(client);
-  return Plugin_Handled;
-}
-
-public SendSteamCommand(client) {
-  sent = 0;
-  received = 0;
-
-  // Loop through and get a definitive number of how many requests we're sending
-  for (new i; i <= MaxClients; i++)
-  {
-    if (i != 0 && IsClientInGame(i) && !IsClientReplay(i))
-    {
-      sent++;
+  if (client != 0 && IsClientInGame(client) && !IsClientReplay(client)) {
+    if(!Steam_RequestGroupStatus(client, GetConVarInt(groupID))) {
+      WarnAdmins(client);
     }
   }
+}
 
-  // Loop through again and send the requests.  We do this separately so that the
-  // async callback doesn't start returning until the number of sent is known.
-  for (new i; i <= MaxClients; i++)
+public OnClientDisconnect(client)
+{
+  new i = FindValueInArray(pubbies, client);
+  if (i != -1) {
+    RemoveFromArray(pubbies, i);
+  }
+
+  i = FindValueInArray(goons, client);
+  if (i != -1)
   {
-    if (i != 0 && IsClientInGame(i) && !IsClientReplay(i))
-    {
-      if(!Steam_RequestGroupStatus(i, GetConVarInt(groupID))) {
-        ReplyToCommand(client, "[LCs] Warning: %N is not connected to Steam.", i);
+    RemoveFromArray(goons, i);
+  }
+}
+
+public Action:DoList(client, args) {
+  if (GetArraySize(goons) > 0) {
+    for (new i; i < GetArraySize(goons); i++) {
+      if(IsClientInGame(GetArrayCell(goons, i))) {
+        ReplyToCommand(client, "[LCs] Goon: %N", GetArrayCell(goons, i));
       }
     }
   }
 
-  Async_GroupStatus_Client = client;
-  Async_GroupStatus_Reply = GetCmdReplySource();
+  if (GetArraySize(pubbies) > 0) {
+    for (new i; i < GetArraySize(pubbies); i++) {
+      if(IsClientInGame(GetArrayCell(goons, i))) {
+        ReplyToCommand(client, "[LCs] PUBBY: %N", GetArrayCell(pubbies, i));
+      }
+    }
+  }
+  return Plugin_Handled;
 }
 
-public Action:Steam_GroupStatusResult(client, groupAccountID, bool:groupMember, bool:groupOfficer)
+public Action:DoKick(client, args) {
+  if (GetArraySize(pubbies) > 0 && IsClientInGame(GetArrayCell(pubbies, 0))) {
+    ReplyToCommand(client, "[LCs] Kicking %N", GetArrayCell(pubbies, 0));
+    KickClientEx(client, "Making room for a Lost Continents member, sorry");
+  } else {
+    ReplyToCommand(client, "[LCs] No pubbies to kick.");
+  }
+  return Plugin_Handled;
+}
+
+public WarnAdmins(client)
 {
-  received++;
+  for (new i; i <= MaxClients; i++)
+  {
+    if (!IsClientInGame(i) || !GetAdminFlag(GetUserAdmin(client), Admin_Ban))
+    {
+      continue;
+    }
+
+    PrintToChat(i, "[LCs] Player %N bypassed Group check. Server disconnected from Steam?", client);
+  }
+}
+
+public Steam_GroupStatusResult(client, groupAccountID, bool:groupMember, bool:groupOfficer)
+{
   if (groupAccountID == GetConVarInt(groupID) && !groupMember)
   {
-    // Kick a pubby
-    if (kick && !kicked) {
-      kicked = true;
-      SetCmdReplySource(Async_GroupStatus_Reply);
-      ReplyToCommand(Async_GroupStatus_Client, "[LCs] Kicking %N", client);
-      PrintToChatAll("[LCs] %N was kicked by kick-a-pubby.", client);
-      KickClientEx(client, "%s", "Making room for a Lost Continents member, sorry!");
-
-      Async_GroupStatus_Reply = SM_REPLY_TO_CONSOLE;
-
-    // List a pubby
-    } else if (!kick) {
-      SetCmdReplySource(Async_GroupStatus_Reply);
-      ReplyToCommand(Async_GroupStatus_Client, "[LCs] PUBBY: %N", client);
-      Async_GroupStatus_Reply = SM_REPLY_TO_CONSOLE;
-    }
+    PushArrayCell(pubbies, client);
   } else {
-
-    // Note that there are, in fact, no pubbies (UNTESTED)
-    if (kick && !kicked && received == sent) {
-      ReplyToCommand(Async_GroupStatus_Client, "[LCs] No pubbies to kick.");
-
-    // List a goon
-    } else if (!kick) {
-      SetCmdReplySource(Async_GroupStatus_Reply);
-      ReplyToCommand(Async_GroupStatus_Client, "[LCs] Goon: %N", client);
-      Async_GroupStatus_Reply = SM_REPLY_TO_CONSOLE;
-    }
-  }
-
-  // Cleanup and finish
-  if (sent == received) {
-    Async_GroupStatus_Client = 0;
-    return Plugin_Handled;
-  } else {
-    return Plugin_Continue;
+    PushArrayCell(goons, client);
   }
 }
-
