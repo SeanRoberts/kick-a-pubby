@@ -6,7 +6,13 @@ class PlayersController < ApplicationController
   end
 
   def kick
-    Player.kick_pubby
+    @players = PlayerList.new
+    resp = @players.kick_pubby
+    if resp
+      flash[:notice] = "#{resp.name} kicked."
+    else
+      flash[:notice] = "No pubbies to kick."
+    end
     redirect_to players_path
   end
 end

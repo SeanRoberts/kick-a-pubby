@@ -26,9 +26,17 @@ class PlayerList
     @players
   end
 
+  def pubbies
+    @players.select { |p| p.pubby? }
+  end
+
+  def kick_pubby
+    pubbies.sample.kick unless pubbies.empty?
+  end
+
   private
     def raw_status
-      if !File.exist?(cache_path) || File.mtime(cache_path) < lambda { 5.minutes.ago }.call
+      if !File.exist?(cache_path) || File.mtime(cache_path) < lambda { 2.minutes.ago }.call
         remote_status
       else
         local_status

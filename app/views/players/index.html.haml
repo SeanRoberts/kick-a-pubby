@@ -15,5 +15,5 @@
       %td{:colspan => 2}= button_to "Kick a Pubby", "/players/kick", :class => "button", :disable_with => "Ruining someone's day...", :id => "kick", :disabled => (@players.size < 24 || @players.select {|p| p.pubby?}.empty?)
 
 %p
-  List updates every 3 minutes or on kick.
+  List updates every 2 minutes or after a successful kick.
   %br/
