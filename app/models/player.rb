@@ -24,8 +24,8 @@ class Player
     file = File.join(Rails.root, 'tmp', 'status_cache.txt')
     File.unlink(file) if File.exist?(file)
     @rcon = RconConnection.new
-    @rcon.command("say \"#{name} is being kicked by kick-a-pubby.  Sorry #{name}!\"")
-    @rcon.command("kick #{steam_id}")
+    @rcon.command("kick \"#{name}\"")
+    @rcon.command("say \"#{name} was kicked by kick-a-pubby.\"")
     self
   end
 end
