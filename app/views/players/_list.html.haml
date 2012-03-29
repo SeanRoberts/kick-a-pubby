@@ -1,0 +1,19 @@
+%table{:style => "display: none;"}
+  %tr
+    %th Players (#{@players.size}/24)
+    %th Pubby?
+  - @players.each do |player|
+    %tr
+      %td= player.name
+      %td= player.pubby? ? "Yes" : "No"
+  - if @players.size == 0
+    %tr
+      %td{:colspan => 2} No players!
+
+  - if current_user && !current_user.pubby?
+    %tr
+      %td{:colspan => 2}= button_to "Kick a Pubby", "/players/kick", :class => "button", :disable_with => "Ruining someone's day...", :id => "kick", :disabled => (@players.size < 24 || @players.select {|p| p.pubby?}.empty?)
+
+%p
+  List updates every 2 minutes or after a successful kick.
+  %br/

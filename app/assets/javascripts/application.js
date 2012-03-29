@@ -16,6 +16,9 @@
 //= require_tree ./features
 //= require_self
 
+jQuery.ajaxSetup({ beforeSend: function(xhr) { xhr.setRequestHeader("Accept", "text/javascript"); } });
+
 $(function () {
   APP.init();
 });
+

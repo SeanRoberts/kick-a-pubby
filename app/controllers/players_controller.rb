@@ -2,7 +2,13 @@ class PlayersController < ApplicationController
   before_filter :not_a_pubby_required, :only => [:kick]
 
   def index
-    @players = PlayerList.new
+    respond_to do |format|
+      format.html {}
+      format.js {
+        @players = PlayerList.new
+        render partial: "list", layout: false
+      }
+    end
   end
 
   def kick
