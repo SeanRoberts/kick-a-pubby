@@ -1,0 +1,12 @@
+= error_messages_for :friend
+
+= form_for @friend do |f|
+  = f.label :steam_id, "Steam ID"
+  = f.text_field :steam_id
+
+  = f.label :name
+  = f.text_field :name
+
+  = f.submit "Save"
+
+= link_to "Steam ID Finder", "http://steamidfinder.com/", target: "_"

@@ -13,11 +13,15 @@ class Player
 
   def pubby?
     group = Group.new(ENV["GROUP_NAME"])
-    bot? || !group.member_ids.include?(community_id)
+    bot? || (!group.member_ids.include?(community_id) && !friend?)
   end
 
   def bot?
     steam_id == "BOT"
+  end
+
+  def friend?
+    @is_friend ||= Friend.find_by_steam_id(steam_id)
   end
 
   def kick

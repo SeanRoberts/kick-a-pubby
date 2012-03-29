@@ -17,11 +17,14 @@
       #user-nav
         - if current_user
           Hello #{current_user.name}
-          %br/
           - if current_user.pubby?
-            You are a pubby and have no access to the kick command.  You must be a member of the Something Awful forums and a member of the Lost Continents Steam group to be not a pubby.
-            Our list is sometimes out of date by up to an hour.  This will not affect your protection from being kicked, only your ability to kick others.
-          = link_to "Sign Out", signout_path
+            %br/
+            You are a pubby and have no access to the kick command.  You must be a member of the Something Awful forums and a member of the Lost Continents Steam group to be not a pubby.  Our list is sometimes out of date by up to an hour.
+          %nav.user-controls
+            - unless current_user.pubby?
+              = link_to "Kick Pubbies", players_path
+              = link_to "Manage Friends", friends_path
+            = link_to "Sign Out", signout_path
         - else
           = link_to image_tag("sits_large_border.png", :alt => "Sign in with Steam"), "/auth/steam"
 
@@ -41,7 +44,6 @@
             %strong Current Server Time:
             %br/
             = Time.now.strftime('%l:%M%p on %B %e, %Y')
-      %h1 Pubby Kicker
       = yield
       %br/
       %br/
