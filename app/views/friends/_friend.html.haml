@@ -1,3 +1,4 @@
-%li
-  = link_to friend.name, edit_friend_path(friend)
-  %small= link_to "(Delete)", friend_path(friend), :method => :delete
+%tr
+  %td= link_to friend.name, edit_friend_path(friend)
+  %td
+    %small= link_to "(Delete)", friend_path(friend), :method => :delete

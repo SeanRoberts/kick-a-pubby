@@ -4,5 +4,11 @@
 
 - unless current_user.friends.empty?
   %h2 Your friends
-  %ul= render partial: "friend", collection: current_user.friends
-= link_to "Add Friend", new_friend_path if current_user.friend.size < Friend.max_friends_per_user
+  %table
+    %thead
+      %tr
+        %th Friend
+        %th
+    %tbody
+      = render partial: "friend", collection: current_user.friends
+= link_to "Add Friend", new_friend_path if current_user.friends.size < Friend.max_friends_per_user

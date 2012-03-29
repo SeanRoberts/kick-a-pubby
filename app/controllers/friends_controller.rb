@@ -15,7 +15,7 @@ class FriendsController < ApplicationController
       flash[:notice] = "Friend updated!"
       redirect_to edit_friend_path(@friend)
     else
-      render action: edit
+      render action: :edit
     end
   end
 
@@ -25,7 +25,7 @@ class FriendsController < ApplicationController
       flash[:notice] = "Welcome to the friend zone!"
       redirect_to edit_friend_path(@friend)
     else
-      render action: new
+      render action: :new
     end
   end
 
