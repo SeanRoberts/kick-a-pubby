@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
     auth = request.env["omniauth.auth"]
     user = User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || User.create_with_omniauth(auth)
     cookies[:user_id] = {value: user.id, expires: 1.month.from_now}
-    session[:user_id] = cookies[:user_id][:value] = user.id
+    session[:user_id] = user.id
     redirect_to root_url, :notice => "Signed in!"
   end
 
