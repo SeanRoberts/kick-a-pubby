@@ -19,6 +19,6 @@ class Friend < ActiveRecord::Base
 
   private
     def is_not_over_limit
-      errors.add(:base, "You already have #{MAX_FRIENDS_PER_USER} friends, don't you think that's enough?") if user.friends.size >= MAX_FRIENDS_PER_USER
+      errors.add(:base, "You already have #{MAX_FRIENDS_PER_USER} friends, don't you think that's enough?") if user.friends.size > MAX_FRIENDS_PER_USER
     end
 end
