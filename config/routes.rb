@@ -1,4 +1,6 @@
 Tf2lcs::Application.routes.draw do
+  resources :friends
+
   resources :players do
     post :kick, :on => :collection
   end
