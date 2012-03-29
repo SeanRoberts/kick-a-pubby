@@ -35,5 +35,4 @@ class FriendsController < ApplicationController
     flash[:notice] = "Sorry it didn't work out with #{@friend.name}."
     redirect_to friends_path
   end
-
 end
