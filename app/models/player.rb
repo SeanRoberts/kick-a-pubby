@@ -25,11 +25,13 @@ class Player
   end
 
   def kick
-    file = File.join(Rails.root, 'tmp', 'status_cache.txt')
-    File.unlink(file) if File.exist?(file)
-    @rcon = RconConnection.new
-    @rcon.command("kick \"#{name}\"")
-    @rcon.command("say \"#{name} was kicked by kick-a-pubby.\"")
-    self
+    if pubby?
+      file = File.join(Rails.root, 'tmp', 'status_cache.txt')
+      File.unlink(file) if File.exist?(file)
+      @rcon = RconConnection.new
+      @rcon.command("kick \"#{name}\"")
+      @rcon.command("say \"#{name} was kicked by kick-a-pubby.\"")
+      self
+    end
   end
 end
