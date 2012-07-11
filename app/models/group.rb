@@ -26,23 +26,26 @@ class Group
     def remote_xml
       require 'open-uri'
       begin
+        steam_ids = []
         current_page = 1
         # Get the first page and write it
         xml = URI.parse("http://steamcommunity.com/groups/#{name}/memberslistxml/?xml=1&p=#{current_page}").read
         doc = Hpricot::XML(xml)
-        f = File.new(cache_path, "w")
-        f.puts doc.search(:steamID64).map(&:inner_html).join("\n")
-        f.close
+        steam_ids += doc.search(:steamID64).map(&:inner_html)
 
         # Get subsequent pages
         while doc.search(:totalPages).inner_html.to_i > current_page
           current_page += 1
           xml = URI.parse("http://steamcommunity.com/groups/#{name}/memberslistxml/?xml=1&p=#{current_page}").read
           doc = Hpricot::XML(xml)
-          f = File.new(cache_path, "a")
-          f.puts doc.search(:steamID64).map(&:inner_html).join("\n")
-          f.close
+          steam_ids += doc.search(:steamID64).map(&:inner_html)
         end
+
+        raise OpenURI::HTTPError if steam_ids.empty?
+
+        f = File.new(cache_path, "w")
+        f.puts steam_ids.join("\n")
+        f.close
 
         local_list
       rescue OpenURI::HTTPError
