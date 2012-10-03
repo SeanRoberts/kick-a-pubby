@@ -54,8 +54,8 @@ class PlayerList
         f.puts status
         f.close
         status
-      rescue RCon::NetworkException => e
-        puts "[Rcon Error] " + e
+      rescue SocketError => e
+        Rails.logger.info "[Rcon Error] " + e
         if @remote_attempts < 3
           local_status
         else

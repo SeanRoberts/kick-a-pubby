@@ -13,6 +13,7 @@ gem 'json'
 gem 'omniauth'
 gem 'omniauth-openid', :git => 'git://github.com/reu/omniauth-openid.git'
 gem 'omniauth-steam'
+gem 'steam-condenser', '1.2.1'
 
 
 # Gems used only for assets and not required
@@ -24,7 +25,7 @@ group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer'
 
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier'
 end
 
 gem 'jquery-rails'

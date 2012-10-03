@@ -1,12 +1,12 @@
-require 'rcon'
-
 class RconConnection
   def initialize
-    @rcon = RCon::Query::Source.new(ENV["RCON_ADDRESS"], ENV["RCON_PORT"] || 27015)
-    @rcon.auth(ENV["RCON_PASSWORD"])
+    port = ENV["RCON_PORT"] ? ENV["RCON_PORT"].to_i : 27015
+    @server = SourceServer.new(ENV["RCON_ADDRESS"], port)
+    @server.init
+    @server.rcon_auth(ENV["RCON_PASSWORD"])
   end
-  
+
   def command(arg)
-    @rcon.command(arg)
+    @server.rcon_exec(arg)
   end
 end
